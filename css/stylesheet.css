@@ -1,0 +1,335 @@
+button {
+    font-family: 'Teko', sans-serif;
+    padding: 2px 2px 2px 2px;
+    font-size: 24px;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: ghostwhite;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    background-color: dimgrey;
+    cursor: default;
+    opacity: 0.8;
+    margin-bottom: 5px;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+button:active {
+    background-color: lightgray;
+    opacity: 1;
+}
+
+button:hover {
+    opacity: 1;
+}
+
+span {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: lightgray;
+    opacity: 0.8;
+}
+
+p {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color:lightgray;
+    margin: 2px;
+}
+
+div {
+    display: block;
+}
+
+html {
+    min-height: 100%;
+    background: radial-gradient(circle, #999797, #292929) no-repeat;
+}
+
+input {
+    width: 5em;
+    text-align: center;
+    background: none;
+    outline-color: lightgray;
+    color: ghostwhite;
+    border-color: ghostwhite;
+    border-radius: 3px;
+    border-width: 1px;
+}
+
+input[type="color" i] {
+    -webkit-appearance: button-bevel;
+    width: 44px;
+    height: 23px;
+    outline: none;
+    background-color: grey;
+    cursor: default;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: lightgray;
+    border-image: initial;
+    padding: 1px 2px;
+}
+
+input[type="radio"] {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    outline: none;
+    cursor: default;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+    border-color: lightgray;
+    margin-top: 3px;
+}
+
+input[type="radio"]:hover {
+    background-color: dimgrey;
+}
+
+input[type="radio"]:checked {
+    background-color: darkgray;
+}
+
+tr.head {
+    text-align: center;
+    padding-bottom: 1em;
+}
+td.label {
+    text-align: right;
+    padding-right: 1em;
+}
+
+select {
+    outline: none;
+    color: ghostwhite;
+    width: 100px;
+    height: 25px;
+    font-size: 18px;
+    border-color: lightgray;
+    background-color: dimgrey;
+    opacity: 0.8;
+}
+
+select:hover {
+    opacity: 1;
+}
+
+a {
+    color: gold;
+    text-decoration: none;
+}
+
+a:visited {
+    color: gold;
+}
+
+a:hover {
+    color: deepskyblue;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25%;
+    height: 15px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid lightgray;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+    background: dimgrey;
+}
+
+.slider:active {
+    opacity: 1;
+    background: dimgrey;
+}
+
+.slider::-webkit-slider-thumb {
+    border: 1px solid lightgray;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    background: dimgrey;
+    cursor: move;
+}
+
+.slider::-moz-range-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    background: lightgray;
+    cursor: pointer;
+}
+
+.button {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 3px;
+    outline: none;
+    color: ghostwhite;
+    border: 1px solid lightgray;
+    background: dimgrey;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.button:active {
+    background-color: lightgray;
+    opacity: 1;
+}
+
+.button:hover {
+    opacity: 1;
+}
+
+.container {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.equation {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: grey;
+    text-align: left;
+}
+
+#description {
+    font-family: 'Russo One', sans-serif;
+    font-size: 30px;
+    color: ghostwhite;
+    opacity: 0.6;
+    margin: 3px;
+}
+
+#frame {
+    position: relative;
+    text-align: left;
+    width: 1200px;
+    margin: auto;
+}
+
+#controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 1000px;
+    text-align: left;
+}
+
+#plot {
+    background-color: black;
+    border-radius: 10px;
+    opacity: 0.4;
+}
+
+#pencolorlabel1 {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: lightgray;
+}
+
+#pencolorlabel2 {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: lightgray;
+}
+
+#pencolorlabel3 {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: lightgray;
+}
+
+#pencolor1 {
+    margin-bottom: 3px;
+    margin-left: 1px;
+}
+
+#pencolor2 {
+    margin: 5px;
+}
+
+#pencolor3 {
+    margin: 4px;
+}
+
+#info {
+    font-family: 'Teko', sans-serif;
+    position: absolute;
+    font-size: 20px;
+    top: 50px;
+    left: 875px;
+    width: 380px;
+    text-align: left;
+    color: lightgray;
+}
+
+#selection {
+    font-size: 20px;
+    margin-top: 3px;
+}
+
+#diagram {
+    position: absolute;
+    top: 695px;
+    left: 1235px;
+    color: lightgray;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+}
+
+#drawing {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 10px;
+}
+
+#visualizer {
+    position: absolute;
+    top: 895px;
+    left: 670px;
+    color: lightgray;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+}
+
+#waveforms {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: lightgray;
+}
+
+#audio {
+    font-family: 'Teko', sans-serif;
+    font-size: 20px;
+    color: lightgray;
+}
+
+#text {
+    position: absolute;
+    top: 580px;
+    left: 0px;
+    width: 350px;
+    text-align: left;
+    margin: 10px;
+}
+
+#footnote {
+    font-size: 16.5px;
+}

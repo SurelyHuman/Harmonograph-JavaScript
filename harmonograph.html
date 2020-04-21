@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Harmonograph</title>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <link rel="shortcut icon" href="data/Blob.jpg">
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One|Girassol|Oswald|Russo+One|Teko&display=swap"
+          rel="stylesheet">
+    <link href="css/stylesheet.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body onload="reset()">
+    <div class="container">
+        <label id ="description">Three Pendulum Harmonograph Simulation</label>
+    </div>
+
+
+    <div id="frame">
+        <svg id="plot" width="1200" height="1000" background-color="black"></svg>
+        <div id="drawing">
+            <canvas id="draw" width="1200" height="1000"></canvas>
+        </div>
+        <div id="controls">
+            <div id="buttons">
+                <button onclick="play()" id="play" value="pause">pause</button>
+                <button onclick="reset()" id="reset">reset</button>
+                <button onclick="showControls()" id="showControls" value="hide controls">hide controls</button>
+                <button onclick="showTable()" id="showTable" value="hide table">hide table</button>
+                <button onclick="showVisualizer()" id="showViz" value="hide visualizer">hide visualizer</button>
+                <button onclick="showDiagram()" id="showDiagram" value="hide diagram">hide diagram</button>
+                <button type="button" onclick="speed()" id="speed">speed</button>
+                <span id="speedmultiplier">&nbsp; 1x</span>
+            </div>
+            <div id="toggleable">
+                <div id="sliders">
+                    <p id="AmplitudeAx">Amplitude Ax:&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="ampAx">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="ampAx">
+                        <input min=-100 max=100 value=100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="ampAx">px</p>
+                    <p id="AmplitudeAy">Amplitude Ay:&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="ampAy">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="ampAy">
+                        <input min=-100 max=100 value=100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="ampAy">px</p>
+                    <p id="PhaseAx">Phase Ax: &emsp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="phAx">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="phAx">
+                        <input min=0 max=180 value=180 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="phAx">&nbsp;°</p>
+                    <p id="PhaseAy">Phase Ay: &emsp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="phAy">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="phAy">
+                        <input min=0 max=180 value=180 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="phAy">&nbsp;°</p>
+                    <p id="DampingA">Damping A: &ensp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="dampA">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="dampA">
+                        <input min=0 max=500 value=200 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="dampA">seconds</p>
+                    <p id="FrequencyA">Frequency A: &nbsp;
+                        <input type="button" value="-" onClick="subtract_oneF(this.name)" class="button" name="freqA">
+                        <input type="button" value="+" onClick="add_oneF(this.name)" class="button" name="freqA">
+                        <input min=0 max=20 value=1 step="0.01" type="range" class="slider"
+                               oninput="inputChangeSliders()" id="freqA">Hz</p>
+                    <p id="AmplitudeBx">Amplitude Bx:&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="ampBx">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="ampBx">
+                        <input min=-100 max=100 value=100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="ampBx">px</p>
+                    <p id="AmplitudeBy">Amplitude By:&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="ampBy">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="ampBy">
+                        <input min=-100 max=100 value=100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="ampBy">px</p>
+                    <p id="PhaseBx">Phase Bx: &emsp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="phBx">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="phBx">
+                        <input min=0 max=180 value=180 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="phBx">&nbsp;°</p>
+                    <p id="PhaseBy">Phase By: &emsp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="phBy">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="phBy">
+                        <input min=0 max=180 value=180 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="phBy">&nbsp;°</p>
+                    <p id="DampingB">Damping B: &ensp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="dampB">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="dampB">
+                        <input min=0 max=500 value=200 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="dampB">seconds</p>
+                    <p id="FrequencyB">Frequency B: &nbsp;
+                        <input type="button" value="-" onClick="subtract_oneF(this.name)" class="button" name="freqB">
+                        <input type="button" value="+" onClick="add_oneF(this.name)" class="button" name="freqB">
+                        <input min=0 max=20 value=0.99  step="0.01" type="range" class="slider"
+                               oninput="inputChangeSliders()" id="freqB">Hz</p>
+                    <p id="AmplitudeCx">Amplitude Cx:&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="ampCx">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="ampCx">
+                        <input min=-100 max=100 value=100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="ampCx">px</p>
+                    <p id="AmplitudeCy">Amplitude Cy:&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="ampCy">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="ampCy">
+                        <input min=-100 max=100 value=-100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="ampCy">px</p>
+                    <p id="PhaseCx">Phase Cx: &emsp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="phCx">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="phCx">
+                        <input min=0 max=180 value=90 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="phCx">&nbsp;°</p>
+                    <p id="PhaseCy">Phase Cy: &emsp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="phCy">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="phCy">
+                        <input min=0 max=180 value=90 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="phCy">&nbsp;°</p>
+                    <p id="DampingC">Damping C: &ensp;&nbsp;
+                        <input type="button" value="-" onClick="subtract_one(this.name)" class="button" name="dampC">
+                        <input type="button" value="+" onClick="add_one(this.name)" class="button" name="dampC">
+                        <input min=0 max=500 value=100 type="range" class="slider"
+                               oninput="inputChangeSliders()" id="dampC">seconds</p>
+                    <p id="FrequencyC">Frequency C: &nbsp;
+                        <input type="button" value="-" onClick="subtract_oneF(this.name)" class="button" name="freqC">
+                        <input type="button" value="+" onClick="add_oneF(this.name)" class="button" name="freqC">
+                        <input min=0 max=20 value=1 step="0.01" type="range" class="slider"
+                               oninput="inputChangeSliders()" id="freqC">Hz</p>
+                    <p id="GlobalTime">Time: &emsp;&emsp;&nbsp;
+                        <input min=0 max="1000" value=0 type="range" step="0.001" class="slider"
+                               oninput="timeStep()" id="time">elapsed t-value</p>
+                    <p id="ColorSelectionParagraph">
+                        <div id="colorSelector1">
+                            <label id="pencolorlabel1">Pen Color 1: &ensp;</label>
+                            <input id="pencolor1" type="color" value="#FF00FF"
+                                   onchange="inputChangeSliders()" ng-model="ctlr.model.graphicsModel.penColor"
+                                   color-input="" class="ng-valid ng-touched ng-dirty ng-valid-parse">
+                        </div>
+                        <div id="colorSelector2">
+                            <label id="pencolorlabel2">Pen Color 2: &nbsp;</label>
+                            <input id="pencolor2" type="color" value="#8A2BE2"
+                                   onchange="inputChangeSliders()" ng-model="ctlr.model.graphicsModel.penColor"
+                                   color-input="" class="ng-valid ng-touched ng-dirty ng-valid-parse">
+                        </div>
+                        <div id="colorSelector3">
+                            <label id="pencolorlabel3">Pen Color 3: &nbsp;</label>
+                            <input id="pencolor3" type="color" value="#00FFFF"
+                                   onchange="inputChangeSliders()" ng-model="ctlr.model.graphicsModel.penColor"
+                                   color-input="" class="ng-valid ng-touched ng-dirty ng-valid-parse">
+                        </div>
+                    </p>
+                    <div id="selection">
+                        <p>Presets:&emsp;&ensp;
+                            <select id="presets" oninput="presets(this.value)">
+                                <option value="none" selected="selected">default</option>
+                                <option value="preset1">minor third</option>
+                                <option value="preset2">perfect fifth</option>
+                                <option value="preset3">major sixth</option>
+                                <option value="preset4">octave</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div id="audio">
+                        <label id="on_off">Set Audio on/off:</label><br>
+                        <form onclick="setAudio()">
+                            <input type="radio" id="on" name="setaudio" value="on">on<br>
+                            <input type="radio" id="off" name="setaudio" value="off" checked="checked">off<br>
+                        </form>
+                    </div>
+                    <div id="waveforms">
+                        <label id="wave">Audio Waveforms:</label><br>
+                        <form onclick="selectWaveform()">
+                            <input type="radio" id="triOsc" name="waveform" value="triangle" checked="checked">Triangle Wave<br>
+                            <input type="radio" id="sinOsc" name="waveform" value="sine">Sine Wave<br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="info">
+            <form>
+                <table>
+                    <tr class="head">
+                        <td> </td>
+                        <td>Pend A</td><td>Pend B</td><td>Pend C</td>
+                    </tr>
+                    <tr>
+                        <td class="label">&nbsp;Amplitude x</td>
+                        <td><input id="a1x" value="100" onchange="inputChangeTable()"/> </td>
+                        <td><input id="a2x" value="100" onchange="inputChangeTable()"/> </td>
+                        <td><input id="a3x" value="100" onchange="inputChangeTable()"/> </td>
+                        <td>&nbsp;px</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Amplitude y</td>
+                        <td><input id="a1y" value="100" onchange="inputChangeTable()"/> </td>
+                        <td><input id="a2y" value="100" onchange="inputChangeTable()"/> </td>
+                        <td><input id="a3y" value="-100" onchange="inputChangeTable()"/> </td>
+                        <td>&nbsp;px</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Phase x</td>
+                        <td><input id="p1x" value="0" onchange="inputChangeTable()"/> </td>
+                        <td><input id="p2x" value="90" onchange="inputChangeTable()"/> </td>
+                        <td><input id="p3x" value="0" onchange="inputChangeTable()"/> </td>
+                        <td>&nbsp;&deg;</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Phase y</td>
+                        <td><input id="p1y" value="90" onchange="inputChangeTable()"/> </td>
+                        <td><input id="p2y" value="0" onchange="inputChangeTable()"/> </td>
+                        <td><input id="p3y" value="0" onchange="inputChangeTable()"/> </td>
+                        <td>&nbsp;&deg;</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Damping</td>
+                        <td><input id="td1" value="180" onchange="inputChangeTable()"/> </td>
+                        <td><input id="td2" value="180" onchange="inputChangeTable()"/> </td>
+                        <td><input id="td3" value="80" onchange="inputChangeTable()"/> </td>
+                        <td>&nbsp;s</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Frequency</td>
+                        <td><input id="f1" value="1" onchange="inputChangeTable()"/> </td>
+                        <td><input id="f2" value="0.99" onchange="inputChangeTable()"/> </td>
+                        <td><input id="f3" value="1" onchange="inputChangeTable()"/> </td>
+                        <td>&nbsp;Hz&nbsp;</td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <div id="visualizer">
+        <label id="viz">&nbsp;Audio Visualizer</label><br>
+        <canvas id="audioviz" width="500" height="100"></canvas>
+    </div>
+
+    <div id="diagram">
+        <label id="rep">&nbsp;Diagram</label><br>
+        <canvas id="representation" width="300" height="300"></canvas>
+    </div>
+
+    <div id="text">
+        <p>
+           This is an interactive simulation of a three pendulum
+            <a href="http://www.karlsims.com/harmonograph/" target="_blank">Harmonograph</a>.
+            To experiment with the harmonic properties of the drawing, enter values into the table or move the sliders.
+           Changes in frequency and phase values result in the most drastic changes. Frequency ratios
+            from the harmonic series generate interesting lissajous curves related to musical harmonies.
+            The diagram illustrates the motion of all three pendulums and the time slider
+            creates a point representing the (x,y) coords for any particular</br> t-value.
+        </p></br>
+        <p>
+            The parametric equations for two pendulums:
+            <div class="equation">x(t) = A<sub>1</sub> &#215; sin( t &#215; f<sub>1</sub> + p<sub>1</sub> )e<sup>-d<sub>1</sub>t</sup>
+            + A<sub>2</sub> &#215; sin( t &#215; f<sub>2</sub> + p<sub>2</sub> )e<sup>-d<sub>2</sub>t</sup></div>
+            <div class="equation">y(t) = A<sub>3</sub> &#215; sin( t &#215; f<sub>3</sub> + p<sub>3</sub> )e<sup>-d<sub>3</sub>t</sup>
+            + A<sub>4</sub> &#215; sin( t &#215; f<sub>4</sub> + p<sub>4</sub> )e<sup>-d<sub>4</sub>t</sup></div>
+        </p>
+        <p id="footnote"> <sup>*</sup>A third calculation added to each equation will add the last pendulum</p>
+    </div>
+
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>
