@@ -10,12 +10,24 @@ var Ax = 0.0, Ay = R, Bx = R, By = 0.0;
 var numsteps, setnumsteps = 100000;
 var diagram, diaContext, plot, plotContext;
 var initial = window.setInterval(step, 1000 * dt);
+var presetValue;
+var scaleFactor = 4;
 
-const rangeQuantize = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 32.70,
+var rangeQuantizeFull = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 32.70,
 	34.65, 36.71, 38.89, 41.20,	43.65, 46.25, 49.00, 51.91,	55.00, 58.27, 61.74, 65.41, 69.30, 73.42, 77.78, 82.41,
 	87.31, 92.50, 98.00, 103.8, 110.0, 116.5, 123.5, 130.8, 138.6, 146.8, 155.6, 164.8, 174.6, 185.0, 196.0, 207.7,
 	220.0, 233.1, 246.9, 261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3,	440.0, 466.2, 493.9, 523.3,
-	554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0, 830.6, 880.0]
+	554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0, 830.6, 880.0, 932.3, 987.8, 1047, 1109, 1175, 1245, 1319, 1397,
+	1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951, 4186,
+	4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902];
+
+var rangeQuantizePerfectFifths = [16.35, 24.50, 36.71, 55.00, 82.41, 123.5, 185.0, 277.2, 415.3, 622.3, 932.3,
+	1397];
+var rangeQuantizeMajorSixths = [19.45, 32.70, 55.00, 92.50, 155.6, 261.6, 440.0, 740.0, 1245];
+var rangeQuantizeMinorThirds = [20.60, 24.50, 29.14, 34.65, 41.20, 49.00, 58.27, 69.30, 82.41, 98.00, 116.5, 138.6,
+	164.8, 196.0, 233.1, 277.2, 329.6, 392.0, 466.2, 554.4, 659.3, 784.0, 932.3, 1109, 1319, 1568];
+
+var whichScale = rangeQuantizeFull;
 
 var drawVisual;
 var source;
@@ -52,17 +64,16 @@ var linearScaleColor = d3.scaleLinear()
 	.range([pencolor1, pencolor2, pencolor3]);
 
 var quantizedScaleFrequency = d3.scaleQuantize()
-	.domain([-150, 150])
-	.range(rangeQuantize);
-	//.range([65.41, 987.8]);
+	.domain([-200, 200])
+	.range(whichScale);
 
 var powerScaleGain = d3.scalePow()
-	.exponent(0.7)
-	.domain([-150, 150])
-	.range([0.01, 0.35]);
+	.exponent(0.6)
+	.domain([-200, 200])
+	.range([0.2, 0.3]);
 
 var linearScalePan = d3.scaleLinear()
-	.domain([-150, 150])
+	.domain([-200, 200])
 	.range([-0.8, 0.8]);
 
 function reset() {
@@ -197,12 +208,19 @@ function step() {
 		}
 	}
 	plotContext.stroke();
-	var scaledXf = quantizedScaleFrequency(x);
-	osc1.frequency.value = scaledXf;
-	osc2.frequency.value = scaledXf*((f1+f2)/(f3+0.001));
+	var scaledXf1 = quantizedScaleFrequency(x);
+	var scaledXf2 = quantizedScaleFrequency(x+scaleFactor);
+	if (x > 170 && presetValue == "preset4") scaledXf2 = quantizedScaleFrequency(x);
+	else if (x > 155.6 && presetValue == "preset3"){
+		scaledXf1 = 740.0;
+		scaledXf2 = 1245.0;
+	}
+	console.log(x, scaledXf1, scaledXf2);
+	osc1.frequency.value = scaledXf1;
+	osc2.frequency.value = scaledXf2;
 	var scaledYg = powerScaleGain(y);
-	var scaledXp = linearScalePan(x);
-	pan.pan.value = scaledXp;
+	var scaledyp = linearScalePan(y);
+	pan.pan.value = scaledyp;
 	gain.gain.value = scaledYg;
 	diaContext.clearRect(-680, -680, 1600, 1600);
 	diaContext.strokeStyle = "grey";
@@ -379,6 +397,9 @@ function inputChangeSliders() {
 	setValue("f3", f3);
 	td3 = read("dampC");
 	setValue("td3", td3);
+	quantizedScaleFrequency = d3.scaleQuantize()
+		.domain([-200, 200])
+		.range(whichScale);
 	pencolor1 = document.getElementById("pencolor1").value;
 	pencolor2 = document.getElementById("pencolor2").value;
 	pencolor3 = document.getElementById("pencolor3").value;
@@ -484,6 +505,7 @@ function timeStep() {
 }
 
 function presets(value) {
+	presetValue = value;
 	if (value == "preset1") {
 		setValue("phAx", 180);
 		setValue("phAy", 180);
@@ -497,6 +519,8 @@ function presets(value) {
 		setValue("freqA", 0.6);
 		setValue("freqB", 0.6);
 		setValue("freqC", 0.5);
+		whichScale = rangeQuantizeMinorThirds;
+		scaleFactor = 30;
 		reset();
 	}
 	else if (value == "preset2") {
@@ -512,6 +536,8 @@ function presets(value) {
 		setValue("freqA", 0.3);
 		setValue("freqB", 0.3);
 		setValue("freqC", 0.2);
+		whichScale = rangeQuantizePerfectFifths;
+		scaleFactor = 33;
 		reset();
 	}
 	else if (value == "preset3") {
@@ -527,6 +553,8 @@ function presets(value) {
 		setValue("freqA", 0.5);
 		setValue("freqB", 0.5);
 		setValue("freqC", 0.3);
+		whichScale = rangeQuantizeMajorSixths;
+		scaleFactor = 45;
 		reset();
 	}
 	else if (value == "preset4") {
@@ -542,6 +570,8 @@ function presets(value) {
 		setValue("freqA", 0.4);
 		setValue("freqB", 0.4);
 		setValue("freqC", 0.2);
+		whichScale = rangeQuantizeFull;
+		scaleFactor = 30;
 		reset();
 	}
 	else {
@@ -557,6 +587,8 @@ function presets(value) {
 		setValue("freqA", 1);
 		setValue("freqB", 0.99);
 		setValue("freqC", 1);
+		whichScale = rangeQuantizeFull;
+		scaleFactor = 4;
 		reset();
 	}
 }
